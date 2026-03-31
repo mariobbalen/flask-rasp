@@ -1,5 +1,7 @@
 from flask import Flask, request, jsonify, render_template, Blueprint, redirect, url_for
 from models.context import *
+from models.user import *
+from flask_login import LoginManager, login_required, current_user, login_user
 
 main_routes = Blueprint("main", __name__)
 
@@ -31,12 +33,15 @@ def use_api():
 def login():
     error = None
     if request.method == 'POST':
-        if request.form.get('username') != 'admin' or request.form.get('password') != 'secret':
-            error = 'Invalid credentials.'
-        else:
+        if request.form.get('username') == 'admin' and request.form.get('password') == 'admin':
+            login_user(user('admin'))
             return redirect(url_for('main.home'))
+        else:
+            error = 'Invalid credentials.'
+
     return render_template('login.html', error=error)
 
+@login_required
 @main_routes.route("/home", methods=['GET'])
 def home():
     return render_template("home.html")

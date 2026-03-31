@@ -14,6 +14,13 @@ def create_table():
             value TEXT NOT NULL
         )"""
     )
+    cursor.execute(
+        """CREATE TABLE IF NOT EXISTS users(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            username VARCHAR(50) NOT NULL UNIQUE,
+            password VARCHAR(100) NOT NULL
+        )"""
+    )
     conn.commit()
     conn.close()
 
